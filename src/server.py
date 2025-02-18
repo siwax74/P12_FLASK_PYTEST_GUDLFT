@@ -17,8 +17,7 @@ def loadCompetitions():
     with open(COMPETITIONS_PATH) as comps:
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
-
-
+    
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
@@ -46,12 +45,25 @@ def book(competition,club):
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
-@app.route('/purchasePlaces',methods=['POST'])
+@app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+
+    # Vérification de la limite de 12 places
+    if placesRequired < 1 or placesRequired > 12:
+        flash("Please enter a number between 1 and 12")
+        return render_template('welcome.html', club=club, competitions=competitions)
+    # Vérification de la disponibilité des places
+    if placesRequired > int(competition['numberOfPlaces']):
+        flash(f"Not enough places available. Only {competition['numberOfPlaces']} places left.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+    if int(competition['numberOfPlaces']) < 0:
+        flash(f"{competition['numberOfPlaces']}, is full.")
+    # Si toutes les conditions sont respectées, réserver les places
+    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+    club['points'] = int(club['points']) - int(placesRequired)
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
