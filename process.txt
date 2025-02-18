@@ -1,0 +1,8 @@
+$env:FLASK_APP="server.py"
+$env:FLASK_ENV="development"
+flask run
+
+Locust:
+cd dir
+locust -f test_performance.py --headless --run-time 30s --users 100 --spawn-rate 10 --host=http://127.0.0.1:5000/
+http://127.0.0.1:5000/
