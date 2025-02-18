@@ -1,15 +1,20 @@
 import json
+from pathlib import Path
 from flask import Flask,render_template,request,redirect,flash,url_for
 
+BASE_DIR = Path(__file__).resolve().parent
+
+CLUB_PATH = BASE_DIR / "datas" / "clubs.json"
+COMPETITIONS_PATH = BASE_DIR / "datas" / "competitions.json"
 
 def loadClubs():
-    with open('clubs.json') as c:
+    with open(CLUB_PATH) as c:
          listOfClubs = json.load(c)['clubs']
          return listOfClubs
 
 
 def loadCompetitions():
-    with open('competitions.json') as comps:
+    with open(COMPETITIONS_PATH) as comps:
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
 
