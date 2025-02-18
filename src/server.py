@@ -60,13 +60,40 @@ def purchasePlaces():
         flash(f"Not enough places available. Only {competition['numberOfPlaces']} places left.")
         return render_template('welcome.html', club=club, competitions=competitions)
     if int(competition['numberOfPlaces']) < 0:
-        flash(f"{competition['numberOfPlaces']}, is full.")
+        flash(f"{competition['numberOfPlaces']} places are full.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+
     # Si toutes les conditions sont respectées, réserver les places
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-    club['points'] = int(club['points']) - int(placesRequired)
+    competition = deduct_competition_places(competition, placesRequired)
+    club = deduct_club_points(club, placesRequired)
+
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
+
+def deduct_competition_places(competition, placesRequired):
+    """
+    Réduit le nombre de places disponibles pour une compétition.
+    Args:
+    - competition (dict) : Dictionnaire contenant les informations de la compétition.
+    - placesRequired (int) : Nombre de places à réserver.
+    Returns:
+    - dict : La compétition mise à jour avec le nombre de places restantes.
+    """
+    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+    return competition
+
+def deduct_club_points(club, placesRequired):
+    """
+    Réduit les points du club en fonction du nombre de places réservées.
+    Args:
+    - club (dict) : Dictionnaire contenant les informations du club.
+    - placesRequired (int) : Nombre de places à réserver.
+    Returns:
+    - dict : Le club mis à jour avec les points restants.
+    """
+    club['points'] = int(club['points']) - int(placesRequired)
+    return club
 
 # TODO: Add route for points display
 
