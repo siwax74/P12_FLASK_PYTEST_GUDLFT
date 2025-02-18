@@ -40,7 +40,7 @@ def showSummary():
     club = get_club_by_email(request.form['email'])
     if club:
         return render_template('welcome.html', club=club, competitions=competitions)
-    else:
+    else: # BUG 3
         flash('Email not found')
         return redirect(url_for('index'))
 
