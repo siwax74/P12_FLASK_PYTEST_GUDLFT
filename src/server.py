@@ -17,7 +17,7 @@ def loadCompetitions():
     with open(COMPETITIONS_PATH) as comps:
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
-    
+
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
@@ -43,6 +43,12 @@ def showSummary():
     else:
         flash('Email not found')
         return redirect(url_for('index'))
+    
+@app.route('/showtable')
+def showTablePoint():
+    clubs = loadClubs()
+    competitions = loadCompetitions()
+    return render_template('tablepoint.html', clubs=clubs, competitions=competitions)
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
@@ -60,7 +66,6 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-
     # Vérification de la limite de 12 places
     if placesRequired < 1 or placesRequired > 12:
         flash("Please enter a number between 1 and 12")
