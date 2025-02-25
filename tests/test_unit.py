@@ -1,5 +1,5 @@
 # test_your_module.py
-from src.server import deduct_club_points, deduct_competition_places, get_club_by_email
+from src.server import deduct_club_points, deduct_competition_places, get_club_by_email, validate_places_required
 
 
 def test_unit_should_return_true_if_email_is_valid(email_auth_data, clubs_data):

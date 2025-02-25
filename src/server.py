@@ -67,7 +67,7 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
     # Vérification de la limite de 12 places
-    error_message = validate_places_required(placesRequired, competition)
+    error_message = validate_places_required(club, competition, placesRequired)
     if error_message is not True:
         flash(error_message)
         return render_template('welcome.html', club=club, competitions=competitions)
@@ -77,14 +77,23 @@ def purchasePlaces():
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
-def validate_places_required(placesRequired, competition):
-    if not isinstance(placesRequired, int) or placesRequired < 1 or placesRequired > 12:
-        return "Please enter a number between 1 and 12"
-    if placesRequired > int(competition['numberOfPlaces']):
-        return f"Not enough places available. Only {competition['numberOfPlaces']} places left."
-    if int(competition['numberOfPlaces']) <= 0:
-        return f"{competition['numberOfPlaces']} places are full."
-    return True
+def validate_places_required(club, competition, placesRequired):
+    try:
+        placesRequired = int(placesRequired)
+        competition_places = int(competition['numberOfPlaces'])
+        club_points = int(club['points'])
+    except ValueError:
+        return "Invalid number of places or points"
+    if placesRequired > 12:
+        return "Sorry, you can only book up to 12 places"
+    elif placesRequired <= 0:
+        return "Sorry, you must book at least 1 place"
+    elif competition_places < placesRequired:
+        return "Sorry, there are not enough places available"
+    elif club_points < placesRequired:
+        return "Sorry, you don't have enough points to book this many places"
+    else:
+        return True
 
 def deduct_competition_places(competition, placesRequired):
     """
