@@ -31,4 +31,3 @@ def test_unit_should_return_true_if_point_competition_is_deduct(competitions_dat
     expected_value = 20  # 25 - 5 = 20
     print(f"test_unit_should_return_true_if_point_competition_is_deduct : OK")
     assert deduct_competition_places(competition, placesRequired)["numberOfPlaces"] == expected_value
-
