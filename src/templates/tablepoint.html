@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table des Points</title>
+</head>
+<body>
+    <h1>Table des Points des Clubs</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nom du Club</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for club in clubs %}
+            <tr>
+                <td>{{ club.name }}</td>
+                <td>{{ club.points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>Liste des Compétitions</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nom de la Compétition</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for competition in competitions %}
+            <tr>
+                <td>{{ competition.name }}</td>
+                <td>{{ competition.date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

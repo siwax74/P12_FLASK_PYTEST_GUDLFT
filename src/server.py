@@ -17,7 +17,7 @@ def loadCompetitions():
     with open(COMPETITIONS_PATH) as comps:
          listOfCompetitions = json.load(comps)['competitions']
          return listOfCompetitions
-    
+
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
@@ -31,18 +31,32 @@ def index():
 def get_club_by_email(email):
     if email:
         matching_clubs = [club for club in clubs if club['email'] == email]
-        return matching_clubs[0] if matching_clubs else False
+        if matching_clubs:
+            return matching_clubs[0]
+        else:
+            return False
     else:
         return False
 
-@app.route('/showSummary',methods=['POST'])
+@app.route('/showSummary', methods=['POST'])
 def showSummary():
-    club = get_club_by_email(request.form['email'])
+    email = request.form['email']
+    # Vérification si l'email est vide
+    if not email:
+        flash('Please enter an email address')
+        return redirect(url_for('index'))
+    club = get_club_by_email(email)
     if club:
         return render_template('welcome.html', club=club, competitions=competitions)
     else: # BUG 3
         flash('Email not found')
         return redirect(url_for('index'))
+
+@app.route('/showtable')
+def showTablePoint():
+    clubs = loadClubs()
+    competitions = loadCompetitions()
+    return render_template('tablepoint.html', clubs=clubs, competitions=competitions)
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
@@ -60,26 +74,34 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-
     # Vérification de la limite de 12 places
-    if placesRequired < 1 or placesRequired > 12:
-        flash("Please enter a number between 1 and 12")
+    error_message = validate_places_required(club, competition, placesRequired)
+    if error_message is not True:
+        flash(error_message)
         return render_template('welcome.html', club=club, competitions=competitions)
-    # Vérification de la disponibilité des places
-    if placesRequired > int(competition['numberOfPlaces']):
-        flash(f"Not enough places available. Only {competition['numberOfPlaces']} places left.")
-        return render_template('welcome.html', club=club, competitions=competitions)
-    if int(competition['numberOfPlaces']) < 0:
-        flash(f"{competition['numberOfPlaces']} places are full.")
-        return render_template('welcome.html', club=club, competitions=competitions)
-
     # Si toutes les conditions sont respectées, réserver les places
     competition = deduct_competition_places(competition, placesRequired)
     club = deduct_club_points(club, placesRequired)
-
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
+def validate_places_required(club, competition, placesRequired):
+    try:
+        placesRequired = int(placesRequired)
+        competition_places = int(competition['numberOfPlaces'])
+        club_points = int(club['points'])
+    except ValueError:
+        return "Invalid number of places or points"
+    if placesRequired > 12:
+        return "Sorry, you can only book up to 12 places"
+    elif placesRequired <= 0:
+        return "Sorry, you must book at least 1 place"
+    elif competition_places < placesRequired:
+        return "Sorry, there are not enough places available"
+    elif club_points < placesRequired:
+        return "Sorry, you don't have enough points to book this many places"
+    else:
+        return True
 
 def deduct_competition_places(competition, placesRequired):
     """
