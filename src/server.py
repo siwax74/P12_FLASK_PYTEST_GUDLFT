@@ -31,19 +31,27 @@ def index():
 def get_club_by_email(email):
     if email:
         matching_clubs = [club for club in clubs if club['email'] == email]
-        return matching_clubs[0] if matching_clubs else False
+        if matching_clubs:
+            return matching_clubs[0]
+        else:
+            return False
     else:
         return False
 
-@app.route('/showSummary',methods=['POST'])
+@app.route('/showSummary', methods=['POST'])
 def showSummary():
-    club = get_club_by_email(request.form['email'])
+    email = request.form['email']
+    # Vérification si l'email est vide
+    if not email:
+        flash('Please enter an email address')
+        return redirect(url_for('index'))
+    club = get_club_by_email(email)
     if club:
         return render_template('welcome.html', club=club, competitions=competitions)
     else:
         flash('Email not found')
         return redirect(url_for('index'))
-    
+
 @app.route('/showtable')
 def showTablePoint():
     clubs = loadClubs()
