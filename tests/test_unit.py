@@ -89,3 +89,20 @@ def test_should_return_false_if_club_have_already_booked_maximum_points(competit
     expected_value = False
     print("test_should_return_false_if_club_have_already_booked_maximum_points : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
+
+def test_should_return_true_if_club_havent_booked_maximum_points(competitions_data, clubs_data):
+    competition = competitions_data[0]
+    club = clubs_data[3]
+    placesRequired = 4
+    expected_value = False
+    print("test_should_return_false_if_club_have_already_booked_maximum_points : OK")
+    assert validate_places_required(club, competition, placesRequired) == expected_value
+
+def test_should_return_true_if_club_havent_booked_maximum_points(competitions_data, clubs_data):
+    competition = competitions_data[0]
+    club = clubs_data[2]
+    placesRequired = 4
+    expected_value = True
+    print("test_should_return_true_if_club_havent_booked_maximum_points : OK")
+    assert validate_places_required(club, competition, placesRequired) == expected_value
+
