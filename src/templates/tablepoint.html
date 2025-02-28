@@ -6,7 +6,7 @@
     <title>Table des Points</title>
 </head>
 <body>
-    <h1>Table des Points des Clubs</h1>
+    <h1>Clubs</h1>
     <table border="1">
         <thead>
             <tr>
@@ -24,12 +24,13 @@
         </tbody>
     </table>
 
-    <h1>Liste des Compétitions</h1>
+    <h1>Compétitions</h1>
     <table border="1">
         <thead>
             <tr>
                 <th>Nom de la Compétition</th>
                 <th>Date</th>
+                <th>Places disponible</th>
             </tr>
         </thead>
         <tbody>
@@ -37,6 +38,8 @@
             <tr>
                 <td>{{ competition.name }}</td>
                 <td>{{ competition.date }}</td>
+                <td>{{ competition.numberOfPlaces }}</td>
+                
             </tr>
             {% endfor %}
         </tbody>

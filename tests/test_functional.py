@@ -16,7 +16,7 @@ def test_ShowSummary(client, email_auth_data, competitions_data):
     assert rv.status_code == 200
     assert b"Welcome" in rv.data
 
-def test_showTablePoint(client, email_auth_data, competitions_data):
+def test_showTablePoint(client):
     rv = client.get('/showTablePoint')
     response_data = rv.data.decode('utf-8')
     print("test_showTablePoint : OK")

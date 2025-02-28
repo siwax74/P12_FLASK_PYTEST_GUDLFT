@@ -8,6 +8,14 @@ locust -f test_performance.py --headless --run-time 30s --users 100 --spawn-rate
 http://127.0.0.1:5000/
 
 
+test_unit
 test que l'email est correct
 test de deduction des points de club
 test de deduction des points de compétition
+test de validation de places
+test de overbooking
+
+test_fonctionnelle
+test de la page d'accueil
+test de la page de connexion
+test de la page de la tableau de points

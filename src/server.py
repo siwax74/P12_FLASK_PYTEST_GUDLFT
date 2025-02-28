@@ -52,7 +52,7 @@ def showSummary():
         flash('Email not found')
         return redirect(url_for('index'))
 
-@app.route('/showtable')
+@app.route('/showTablePoint')
 def showTablePoint():
     clubs = loadClubs()
     competitions = loadCompetitions()
@@ -90,16 +90,20 @@ def validate_places_required(club, competition, placesRequired):
         placesRequired = int(placesRequired)
         competition_places = int(competition['numberOfPlaces'])
         club_points = int(club['points'])
+        booked = int(club.get('reservations', {}).get(competition['name'], 0))
     except ValueError:
-        return "Invalid number of places or points"
-    if placesRequired > 12:
-        return "Sorry, you can only book up to 12 places"
+        return False
+
+    total_reserved = booked + placesRequired
+
+    if total_reserved > 12:
+        return False
     elif placesRequired <= 0:
-        return "Sorry, you must book at least 1 place"
+        return False
     elif competition_places < placesRequired:
-        return "Sorry, there are not enough places available"
+        return False
     elif club_points < placesRequired:
-        return "Sorry, you don't have enough points to book this many places"
+        return False
     else:
         return True
 
