@@ -21,35 +21,29 @@ def email_auth_wrongdata():
 @pytest.fixture
 def clubs_data():
     return [
-
         {
-
-            "name":"Simply Lift",
-
-            "email":"john@simplylift.co",
-
-            "points":"13"
-
+            "name": "Simply Lift",
+            "email": "john@simplylift.co",
+            "points": "13"
         },
-
         {
-
-            "name":"Iron Temple",
-
+            "name": "Iron Temple",
             "email": "admin@irontemple.com",
-
-            "points":"4"
-
+            "points": "4"
         },
-
-        {   "name":"She Lifts",
-
+        {
+            "name": "She Lifts",
             "email": "kate@shelifts.co.uk",
-
-            "points":"12"
-
+            "points": "12"
+        },
+        {   
+            "name": "Test_already_booked",
+            "email": "Test_already_booked@test.com",
+            "points": "15",
+            "reservations": {
+                "Spring Festival": 12
+            }
         }
-
     ]
 
 @pytest.fixture
