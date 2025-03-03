@@ -1,20 +1,20 @@
 # test_your_module.py
-from src.server import deduct_club_points, deduct_competition_places, get_club_by_email, validate_places_required
+from src.server import deduct_club_points, deduct_competition_places, validate_email, validate_places_required
 
 # AUTH - EMAIL
 def test_unit_should_return_true_if_email_is_valid(email_auth_data, clubs_data):
     # Utilisation de l'email invalide de la fixture pour le test
     email = email_auth_data['email']
-    expected_value = clubs_data[0]
+    is_email_valid = any(club['email'] == email for club in clubs_data)
     print(f"test_unit_should_return_true_if_email_is_valid : OK")
-    assert get_club_by_email(email) == expected_value
+    assert validate_email(email) == is_email_valid
 
 def test_unit_should_return_false_if_email_is_not_valid(email_auth_wrongdata):
     # Utilisation de l'email invalide de la fixture pour le test
     email = email_auth_wrongdata["email"]
     expected_value = False
     print(f"test_unit_should_return_false_if_email_is_not_valid : OK")
-    assert get_club_by_email(email) == expected_value
+    assert validate_email(email) == expected_value
 
 # DEDUCT POINTS
 def test_unit_should_return_true_if_point_club_is_deduct(clubs_data):
@@ -92,17 +92,10 @@ def test_should_return_false_if_club_have_already_booked_maximum_points(competit
 
 def test_should_return_true_if_club_havent_booked_maximum_points(competitions_data, clubs_data):
     competition = competitions_data[0]
-    club = clubs_data[3]
-    placesRequired = 4
-    expected_value = False
-    print("test_should_return_false_if_club_have_already_booked_maximum_points : OK")
-    assert validate_places_required(club, competition, placesRequired) == expected_value
-
-def test_should_return_true_if_club_havent_booked_maximum_points(competitions_data, clubs_data):
-    competition = competitions_data[0]
     club = clubs_data[2]
     placesRequired = 4
     expected_value = True
     print("test_should_return_true_if_club_havent_booked_maximum_points : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
+
 

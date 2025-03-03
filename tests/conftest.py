@@ -58,5 +58,10 @@ def competitions_data():
             "name": "Fall Classic",
             "date": "2020-10-22 13:30:00",
             "numberOfPlaces": "3"
+        },
+                {
+            "name": "near future",
+            "date": "2030-10-22 13:30:00",
+            "numberOfPlaces": "5"
         }
     ]

@@ -26,13 +26,31 @@ def test_showTablePoint(client):
     assert "Clubs" in response_data
     assert "Compétitions" in response_data
 
-def test_book(client):
+def test_book(client, competitions_data, clubs_data):
     # Cas où tout est correct
-    rv = client.get('/book/Spring%20Festival/Simply%20Lift')
-    response_data = rv.data.decode('utf-8')
+    competition = competitions_data[0]
+    club = clubs_data[0]
+    rv = client.get(f'/book/{competition["name"]}/{club["name"]}')
     print("test_book : OK")
+    response_data = rv.data.decode('utf-8')
     assert rv.status_code == 200
     assert "Spring Festival" in response_data
     assert "Simply Lift" in response_data
+
+def test_purchase_places(client, competitions_data, clubs_data):
+    # Cas où tout est correct
+    club = clubs_data[0]
+    competition = competitions_data[0]
+    places_required = 4
+    rv = client.post('/purchasePlaces', data={
+        'competition': competition['name'],
+        'club': club['name'],
+        'places': places_required
+    })
+    print("test_purchase_places : OK")
+    assert rv.status_code == 200
+    assert b"Great-booking complete!" in rv.data
+
+    
 
 
