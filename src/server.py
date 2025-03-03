@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from pathlib import Path
 from flask import Flask,render_template,request,redirect,flash,url_for
@@ -69,16 +70,30 @@ def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
+
+    # Vérification si la compétition est passée
+    if competition_is_over_or_not(competition):
+        flash("Cette compétition est déjà passée. Vous ne pouvez plus réserver de places.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+
     # Vérification de la limite de 12 places
     error_message = validate_places_required(club, competition, placesRequired)
     if error_message is not True:
         flash(error_message)
         return render_template('welcome.html', club=club, competitions=competitions)
+
     # Si toutes les conditions sont respectées, réserver les places
-    competition = deduct_competition_places(competition, placesRequired)
-    club = deduct_club_points(club, placesRequired)
+    deduct_competition_places(competition, placesRequired)
+    deduct_club_points(club, placesRequired)
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
+
+def competition_is_over_or_not(competition):
+    """ Vérifie si la compétition est déjà passée """
+    competition_date = datetime.strptime(competition['date'], "%Y-%m-%d %H:%M:%S")
+    if competition_date > datetime.now():
+        return True
+    return False
 
 def validate_places_required(club, competition, placesRequired):
     try:
