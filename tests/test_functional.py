@@ -41,7 +41,6 @@ def test_purchase_places(client, competitions_data, clubs_data):
     # Cas où tout est correct
     club = clubs_data[0]
     competition = competitions_data[0]
-
     places_required = 4
     rv = client.post('/purchasePlaces', data={
         'competition': competition['name'],
@@ -52,4 +51,9 @@ def test_purchase_places(client, competitions_data, clubs_data):
     assert rv.status_code == 200
     assert b"Great-booking complete!" in rv.data
 
-
+def test_logout(client):
+    """Test de déconnexion de l'utilisateur"""
+    # Tester la déconnexion
+    rv = client.get('/logout')
+    assert rv.status_code == 302
+    assert rv.headers['Location'] == '/'
