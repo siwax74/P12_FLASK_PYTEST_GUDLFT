@@ -62,6 +62,6 @@ def competitions_data():
                 {
             "name": "near future",
             "date": "2030-10-22 13:30:00",
-            "numberOfPlaces": "5"
+            "numberOfPlaces": "25"
         }
     ]

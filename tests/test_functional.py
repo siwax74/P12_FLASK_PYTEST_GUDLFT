@@ -41,6 +41,7 @@ def test_purchase_places(client, competitions_data, clubs_data):
     # Cas où tout est correct
     club = clubs_data[0]
     competition = competitions_data[0]
+
     places_required = 4
     rv = client.post('/purchasePlaces', data={
         'competition': competition['name'],
@@ -50,7 +51,5 @@ def test_purchase_places(client, competitions_data, clubs_data):
     print("test_purchase_places : OK")
     assert rv.status_code == 200
     assert b"Great-booking complete!" in rv.data
-
-    
 
 

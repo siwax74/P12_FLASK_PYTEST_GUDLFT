@@ -1,5 +1,5 @@
 # test_your_module.py
-from src.server import deduct_club_points, deduct_competition_places, validate_email, validate_places_required
+from src.server import competition_is_over_or_not, deduct_club_points, deduct_competition_places, validate_email, validate_places_required
 
 # AUTH - EMAIL
 def test_unit_should_return_true_if_email_is_valid(email_auth_data, clubs_data):
@@ -98,4 +98,20 @@ def test_should_return_true_if_club_havent_booked_maximum_points(competitions_da
     print("test_should_return_true_if_club_havent_booked_maximum_points : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
 
+# Test si la compétition n'est pas passée
+def test_competition_is_over_should_return_true_if_date_is_not_past(competitions_data):
+    # Compétition qui est dans le futur
+    future_competition = competitions_data[2]  # 'near future'
+    expected_value = True
+    print("test_competition_is_over_should_return_true_if_date_is_not_past : OK")
+    assert competition_is_over_or_not(future_competition) == expected_value
 
+# Test si la compétition est déjà passée
+def test_competition_is_over_should_return_False_if_date_past(competitions_data):
+    # Compétition passée
+    past_competition = competitions_data[0]  # 'Spring Festival'
+    expected_value = False
+    print("test_competition_is_over_should_return_False_if_date_past : OK")
+    assert competition_is_over_or_not(past_competition) == expected_value
+
+    

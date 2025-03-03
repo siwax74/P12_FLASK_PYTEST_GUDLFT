@@ -28,29 +28,24 @@ clubs = loadClubs()
 def index():
     return render_template('index.html')
 
-def get_club_by_email(email):
-    if email:
-        matching_clubs = [club for club in clubs if club['email'] == email]
-        if matching_clubs:
-            return matching_clubs[0]
-        else:
-            return False
-    else:
-        return False
+def validate_email(email):
+    # Check if the email exists in the 'clubs' list
+    return any(club['email'] == email for club in clubs)
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
     email = request.form['email']
-    # Vérification si l'email est vide
-    if not email:
-        flash('Please enter an email address')
-        return redirect(url_for('index'))
-    club = get_club_by_email(email)
-    if club:
-        return render_template('welcome.html', club=club, competitions=competitions)
-    else:
-        flash('Email not found')
-        return redirect(url_for('index'))
+
+    # Use the validate_email function to check if the email exists
+    if not validate_email(email):
+        flash("Invalid email address. Please try again.")
+        return redirect(url_for('index'))  # or redirect to a specific error page
+
+    # Find the club that matches the email
+    club = [club for club in clubs if club['email'] == email][0]
+
+    # If club is found, render the summary page
+    return render_template('welcome.html', club=club, competitions=competitions)
 
 @app.route('/showTablePoint')
 def showTablePoint():
