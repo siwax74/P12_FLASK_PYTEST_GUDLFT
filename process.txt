@@ -5,7 +5,8 @@ flask run
 Locust:
 cd dir
 locust -f test_performance.py --headless --run-time 30s --users 100 --spawn-rate 10 --host=http://127.0.0.1:5000/
-http://127.0.0.1:5000/
+Accès a la page Locust : http://localhost:8089/
+fonctionnel: Plusieur paramètres a tester
 
 
 test_unit
@@ -14,8 +15,21 @@ test de deduction des points de club
 test de deduction des points de compétition
 test de validation de places
 test de overbooking
+    Exemples:
+        -   Récupération des fixtures
+        -   Valeur attendue : False or True
+        -   Affichage d'un message : print(f"test_unit_should_return_false_if_email_is_not_valid : OK")
+        -   Assertion : assert validate_email(email) == expected_value
+    La fonction validate_email() est appelée avec l'email fourni par la fixture.
+    Le test vérifie que la fonction retourne bien False.
+    Si l'assertion échoue, le test est marqué comme "failed"
+
 
 test_fonctionnelle
-test de la page d'accueil
-test de la page de connexion
-test de la page de la tableau de points
+test route de la page d'accueil
+test route de la page de connexion
+test route de la page de la tableau de points
+test route de la view d'achat de places
+test POST d'achat de place
+test de logout
+
