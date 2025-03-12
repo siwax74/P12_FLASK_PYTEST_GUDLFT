@@ -1,39 +1,36 @@
-# test_your_module.py
-from src.server import competition_is_over_or_not, deduct_club_points, deduct_competition_places, validate_email, validate_places_required
+from src.server import competition_is_over, deduct_club_points, deduct_competition_places, validate_email, validate_places_required
+import pytest
 
-# AUTH - EMAIL
+# Test de la validation de l'email
 def test_unit_should_return_true_if_email_is_valid(email_auth_data, clubs_data):
-    # Utilisation de l'email invalide de la fixture pour le test
     email = email_auth_data['email']
-    is_email_valid = any(club['email'] == email for club in clubs_data)
+    expected_value = True
     print(f"test_unit_should_return_true_if_email_is_valid : OK")
-    assert validate_email(email) == is_email_valid
+    assert validate_email(email) == expected_value
 
 def test_unit_should_return_false_if_email_is_not_valid(email_auth_wrongdata):
-    # Utilisation de l'email invalide de la fixture pour le test
     email = email_auth_wrongdata["email"]
     expected_value = False
     print(f"test_unit_should_return_false_if_email_is_not_valid : OK")
     assert validate_email(email) == expected_value
 
-# DEDUCT POINTS
+# Test de la déduction de points pour le club
 def test_unit_should_return_true_if_point_club_is_deduct(clubs_data):
-    # Sélectionne le premier club de la fixture
     club = clubs_data[0]  # "Simply Lift"
     placesRequired = 5
     expected_value = 8  # 13 - 5 = 8
     print(f"test_unit_should_return_true_if_point_club_is_deduct : OK")
     assert deduct_club_points(club, placesRequired)["points"] == expected_value
 
+# Test de la déduction de places pour la compétition
 def test_unit_should_return_true_if_point_competition_is_deduct(competitions_data):
-    # Sélectionne la première compétition de la fixture
     competition = competitions_data[0]
     placesRequired = 5
     expected_value = 20  # 25 - 5 = 20
     print(f"test_unit_should_return_true_if_point_competition_is_deduct : OK")
     assert deduct_competition_places(competition, placesRequired)["numberOfPlaces"] == expected_value
 
-# PLACE AVAILABLE
+# Test de la validation des places disponibles
 def test_validate_places_required_should_return_true_if_places_available(competitions_data, clubs_data):
     competition = competitions_data[0]
     club = clubs_data[0]
@@ -46,7 +43,7 @@ def test_validate_places_required_should_fail_when_booking_more_than_12(competit
     competition = competitions_data[0]
     club = clubs_data[0]
     placesRequired = 13
-    expected_value = False
+    expected_value = "Vous ne pouvez pas réserver plus de 12 places par compétition."
     print("test_validate_places_required_should_fail_when_booking_more_than_12 : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
 
@@ -54,7 +51,7 @@ def test_validate_places_required_should_fail_when_booking_zero_or_less(competit
     competition = competitions_data[0]
     club = clubs_data[0]
     placesRequired = 0
-    expected_value = False
+    expected_value = "Le nombre de places doit être supérieur à zéro."
     print("test_validate_places_required_should_fail_when_booking_zero_or_less : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
 
@@ -62,7 +59,7 @@ def test_validate_places_required_should_fail_when_not_enough_competition_places
     competition = competitions_data[1]  # Seulement 3 places disponibles
     club = clubs_data[0]
     placesRequired = 5
-    expected_value = False
+    expected_value = "Pas assez de places disponibles pour cette compétition."
     print("test_validate_places_required_should_fail_when_not_enough_competition_places : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
 
@@ -70,7 +67,7 @@ def test_validate_places_required_should_fail_when_club_has_insufficient_points(
     competition = competitions_data[0]
     club = clubs_data[1]  # Seulement 4 points disponibles
     placesRequired = 6
-    expected_value = False
+    expected_value = "Pas assez de points pour réserver ces places."
     print("test_validate_places_required_should_fail_when_club_has_insufficient_points : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
 
@@ -78,7 +75,7 @@ def test_validate_places_required_should_fail_on_invalid_input(competitions_data
     competition = competitions_data[0]
     club = clubs_data[0]
     placesRequired = "invalid"
-    expected_value = False
+    expected_value = "Invalid number of places requested."
     print("test_validate_places_required_should_fail_on_invalid_input : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
 
@@ -86,7 +83,7 @@ def test_should_return_false_if_club_have_already_booked_maximum_points(competit
     competition = competitions_data[0]
     club = clubs_data[3]
     placesRequired = 4
-    expected_value = False
+    expected_value = "Vous ne pouvez pas réserver plus de 12 places par compétition."
     print("test_should_return_false_if_club_have_already_booked_maximum_points : OK")
     assert validate_places_required(club, competition, placesRequired) == expected_value
 
@@ -99,19 +96,15 @@ def test_should_return_true_if_club_havent_booked_maximum_points(competitions_da
     assert validate_places_required(club, competition, placesRequired) == expected_value
 
 # Test si la compétition n'est pas passée
-def test_competition_is_over_should_return_true_if_date_is_not_past(competitions_data):
-    # Compétition qui est dans le futur
-    future_competition = competitions_data[2]  # 'near future'
+def test_competition_is_over_should_return_true_if_date_is_past(competitions_data):
+    future_competition = competitions_data[0]  # 'Spring Festival'
     expected_value = True
     print("test_competition_is_over_should_return_true_if_date_is_not_past : OK")
-    assert competition_is_over_or_not(future_competition) == expected_value
+    assert competition_is_over(future_competition) == expected_value
 
 # Test si la compétition est déjà passée
-def test_competition_is_over_should_return_False_if_date_past(competitions_data):
-    # Compétition passée
-    past_competition = competitions_data[0]  # 'Spring Festival'
+def test_competition_is_over_should_return_False_if_date_is_not_past(competitions_data):
+    past_competition = competitions_data[2]  # 'near future'
     expected_value = False
     print("test_competition_is_over_should_return_False_if_date_past : OK")
-    assert competition_is_over_or_not(past_competition) == expected_value
-
-    
+    assert competition_is_over(past_competition) == expected_value

@@ -36,12 +36,12 @@ def clubs_data():
             "email": "kate@shelifts.co.uk",
             "points": "12"
         },
-        {   
+        {
             "name": "Test_already_booked",
             "email": "Test_already_booked@test.com",
             "points": "15",
             "reservations": {
-                "Spring Festival": 12
+                "Spring Festival": 12,
             }
         }
     ]
@@ -59,7 +59,7 @@ def competitions_data():
             "date": "2020-10-22 13:30:00",
             "numberOfPlaces": "3"
         },
-                {
+        {
             "name": "near future",
             "date": "2030-10-22 13:30:00",
             "numberOfPlaces": "25"
