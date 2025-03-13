@@ -20,8 +20,8 @@ Cette branche utilise les mêmes technologies de base que la branche **master** 
 
 1. **Cloner le dépôt et changer de branche :**
    ```bash
-   git clone <url_du_dépôt>
-   cd gudlift-registration
+   git clone git@github.com:siwax74/P12_FLASK_PYTEST_GUDLFT.git
+   cd P12_FLASK_PYTEST_GUDLFT
    git checkout QA
    ```
 
