@@ -25,7 +25,7 @@ pycparser==2.22
 pytest==8.3.4
 pywin32==308
 pyzmq==26.2.1
-requests==2.32.3
+requests==2.32.4
 setuptools==75.8.0
 urllib3==2.3.0
 Werkzeug==3.0.6
